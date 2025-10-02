@@ -10,11 +10,12 @@ class NoteController extends Controller
 {
     /**
      * Display a listing of the resource.
+     * Each user should be able to view only their notes
      */
     public function index()
     {
-        $user_id = Auth::id();// Each user should be able to view only their notes
-        $notes= Note::where('user_id', $user_id)->latest('updated')->get();
+        $user_id = Auth::id();
+        $notes= Note::where('user_id', $user_id)->latest('updated')->paginate(5);
         return view('notes.index')->with('notes', $notes);
     }
 

@@ -12,12 +12,6 @@ Route::get('/', function () {
     // dd($users);
 });
 
-/**
- * With middleware auth only users who have logged in can access the dashboard
- */
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -34,6 +28,7 @@ require __DIR__.'/auth.php';
  */
 
 /**
+ * With middleware auth only users who have logged in can access the following links
  * Register a single resource route that points to the resource controller w/ auth  for users who sign in
  */
 
