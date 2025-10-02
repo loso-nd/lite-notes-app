@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\ProfileController;
@@ -7,6 +8,8 @@ use App\Http\Controllers\NoteBookController;
 
 Route::get('/', function () {
     return view('welcome');
+    // $users = DB::select('select * from users');
+    // dd($users);
 });
 
 /**

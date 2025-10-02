@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Note;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class NoteController extends Controller
 {
@@ -12,7 +13,14 @@ class NoteController extends Controller
      */
     public function index()
     {
-        //
+        $user_id = Auth::id();// Each user should be able to view only their notes
+        // $notes= Note::where('user_id', $user_id)->latest()->get(); //where user_id matches current user with the latest created note
+        $notes= Note::where('user_id', $user_id)->latest('updated')->get(); //where user_id matches current user with the latest updated note
+
+        $notes->each(function($note){
+            dump($note->title);
+        });
+        dd($notes);
     }
 
     /**
