@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\NoteBookController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -34,3 +35,4 @@ require __DIR__.'/auth.php';
  */
 
 Route::resource('notes', NoteController::class)->middleware('auth');
+Route::resource('notebooks', NoteBookController::class)->middleware('auth');
