@@ -46,6 +46,8 @@ class NoteController extends Controller
             'text' => $request->text
         ]);
         $note->save();
+
+        return to_route('notes.show', $note);
     }
 
     /**
@@ -67,7 +69,13 @@ class NoteController extends Controller
      */
     public function edit(Note $note)
     {
-        //
+
+        // User can only see thier own notes
+        if($note->user_id !== Auth::id()){
+            abort(403);
+        }
+
+        return view('notes.edit', ['note' => $note]);
     }
 
     /**
@@ -75,7 +83,27 @@ class NoteController extends Controller
      */
     public function update(Request $request, Note $note)
     {
-        //
+        //We can check to see the request coming in
+        // dd($request);
+
+        // User can only see thier own notes
+        if($note->user_id !== Auth::id()){
+            abort(403);
+        }
+
+        $request->validate([
+            'title' => 'required|max:120',
+            'text' => 'required'
+        ]);
+
+        // create a new Note to be saved
+        $note->update([
+            'title' => $request->title,
+            'text' => $request->text
+        ]);
+
+        return to_route('notes.show', $note);
+
     }
 
     /**
@@ -83,6 +111,14 @@ class NoteController extends Controller
      */
     public function destroy(Note $note)
     {
-        //
+        // User can only see thier own notes
+        if($note->user_id !== Auth::id()){
+            abort(403);
+        }
+
+        // create a new Note to be saved
+        $note->delete();
+
+        return to_route('notes.index');
     }
 }
