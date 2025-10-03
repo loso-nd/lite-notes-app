@@ -1,0 +1,4 @@
+{{-- pass in the value props from create.blade.php to be used w/in the textarea--}}
+@props(['disabled' => false, 'value' => ''])
+
+<textarea {{ $disabled ? 'disabled' : '' }} {!! $attributes->merge(['class' => 'border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm']) !!}>{{ $value }}</textarea>

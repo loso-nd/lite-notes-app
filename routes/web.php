@@ -8,8 +8,6 @@ use App\Http\Controllers\NoteBookController;
 
 Route::get('/', function () {
     return view('welcome');
-    // $users = DB::select('select * from users');
-    // dd($users);
 });
 
 
