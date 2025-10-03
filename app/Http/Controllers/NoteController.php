@@ -55,7 +55,14 @@ class NoteController extends Controller
      */
     public function show(Note $note)
     {
-        //
+
+        //User can only see thier own notes
+        if($note->user_id !== Auth::id()){
+            abort(403);
+        }
+
+        // Returns a view with a specific note
+        return view('notes.show', ['note' => $note]);
     }
 
     /**
