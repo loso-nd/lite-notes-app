@@ -32,7 +32,22 @@ class NoteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // First check to see what request is being passed in
+        // dd($request);
+
+        // validate our request [https://laravel.com/docs/12.x/validation]
+        $request->validate([
+            'title' => 'required|max:120',
+            'text' => 'required'
+        ]);
+
+        // create a new Note to be saved
+        $note = new Note([
+            'user_id' => Auth::id(), //Authenticate the user ID
+            'title' => $request->title,
+            'text' => $request->text
+        ]);
+        $note->save();
     }
 
     /**
