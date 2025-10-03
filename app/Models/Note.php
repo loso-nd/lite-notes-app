@@ -10,6 +10,17 @@ class Note extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    /**
+     *
+     * Example of route model binding uses ID key by default to resolve in the model
+     * We can customize this and return uuid where any model that you pass using route model binding will be resolved using uuid.
+     *
+     * */ 
+    public function getRouteKeyName()
+    {
+        return 'uuid';
+    }
 }
 
 

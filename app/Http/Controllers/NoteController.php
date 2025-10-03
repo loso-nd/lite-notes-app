@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Note;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -32,10 +33,6 @@ class NoteController extends Controller
      */
     public function store(Request $request)
     {
-        // First check to see what request is being passed in
-        // dd($request);
-
-        // validate our request [https://laravel.com/docs/12.x/validation]
         $request->validate([
             'title' => 'required|max:120',
             'text' => 'required'
@@ -43,7 +40,8 @@ class NoteController extends Controller
 
         // create a new Note to be saved
         $note = new Note([
-            'user_id' => Auth::id(), //Authenticate the user ID
+            'user_id' => Auth::id(),
+            'uuid' => Str::uuid(),
             'title' => $request->title,
             'text' => $request->text
         ]);
@@ -56,12 +54,11 @@ class NoteController extends Controller
     public function show(Note $note)
     {
 
-        //User can only see thier own notes
+        // User can only see thier own notes
         if($note->user_id !== Auth::id()){
             abort(403);
         }
 
-        // Returns a view with a specific note
         return view('notes.show', ['note' => $note]);
     }
 
