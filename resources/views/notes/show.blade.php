@@ -50,14 +50,14 @@
                                 Restore Note
                             </x-primary-button>
                         </form>
-                        {{-- <form action="{{ route('notes.destroy', $note) }}" method="post">
+                        <form action="{{ route('trashed.destroy', $note) }}" method="post">
                             @method('delete')
                             @csrf
                             <x-primary-button class="bg-red-500 hover:bg-red-600 focus:bg-red-600"
-                                onclick=" return confirm('Are you sure you want to move this note to trash?')"> 
-                                Move Note to Trash 
+                                onclick=" return confirm('Are you sure you want to delete this note? This action can not be undone?')"> 
+                                Delete Forever
                             </x-primary-button>
-                        </form> --}}
+                        </form>
                     </div>
 
                 </div>
