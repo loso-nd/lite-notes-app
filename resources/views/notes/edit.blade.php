@@ -26,7 +26,7 @@
                         <option value="">-- Select Notebook --</option>
                         @foreach ($notebooks as $notebook)
                             <option value="{{ $notebook->id }}"
-                                @if ($notebook-> === $note->notebook_id)
+                                @if ($notebook === $note->notebook_id)
                                     selected
                                 @endif
                                 >{{ $notebook->name}}</option>

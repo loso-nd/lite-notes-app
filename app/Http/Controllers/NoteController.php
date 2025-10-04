@@ -26,6 +26,7 @@ class NoteController extends Controller
      */
     public function create()
     {
+        // fetch all the notebooks and pass it to the create view, then retun notes.create view and pass it with $notebooks.
         $notebooks = NoteBook::where('user_id', Auth::id())->get();
         return view('notes.create')->with('notebooks', $notebooks);
     }
@@ -58,8 +59,6 @@ class NoteController extends Controller
      */
     public function show(Note $note)
     {
-
-        // User can only see thier own notes
         if($note->user_id !== Auth::id()){
             abort(403);
         }
@@ -72,14 +71,11 @@ class NoteController extends Controller
      */
     public function edit(Note $note)
     {
-
-        // User can only see thier own notes
         if($note->user_id !== Auth::id()){
             abort(403);
         }
 
         $notebooks = NoteBook::where('user_id', Auth::id())->get();
-
         return view('notes.edit', ['note' => $note, 'notebooks' => $notebooks]);
     }
 
@@ -88,10 +84,6 @@ class NoteController extends Controller
      */
     public function update(Request $request, Note $note)
     {
-        //We can check to see the request coming in
-        // dd($request);
-
-        // User can only see thier own notes
         if($note->user_id !== Auth::id()){
             abort(403);
         }
@@ -101,7 +93,6 @@ class NoteController extends Controller
             'text' => 'required'
         ]);
 
-        // create a new Note to be saved
         $note->update([
             'title' => $request->title,
             'text' => $request->text,
@@ -110,7 +101,6 @@ class NoteController extends Controller
 
         return to_route('notes.show', $note)
             ->with('success', 'Changes saved');
-
     }
 
     /**
