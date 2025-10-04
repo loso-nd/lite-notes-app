@@ -7,6 +7,9 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+
+            <x-alert-success>{{ session('success') }}</x-alert-success>
+
             <div class="flex justify-between items-center">
                 <div class="flex gap-6">
                     <p class="opacity-70"><strong>Created:</strong> {{ $note->created_at->diffForHumans() }}</p>
@@ -18,7 +21,7 @@
                     @method('delete')
                     @csrf
                     <x-primary-button class="bg-red-500 hover:bg-red-600 focus:bg-red-600"
-                        onclick=" return confirm('Are you sure you want to delete this note?')"    > Delete Note </x-primary-button>
+                        onclick=" return confirm('Are you sure you want to delete this note?')"> Delete Note </x-primary-button>
                 </form>
                 </div>
 

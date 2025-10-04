@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Note;
+use App\Models\NoteBook;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +17,7 @@ class NoteController extends Controller
     public function index()
     {
         $user_id = Auth::id();
-        $notes= Note::where('user_id', $user_id)->latest('updated')->paginate(5);
+        $notes= Note::where('user_id', $user_id)->latest('updated_at')->paginate(5);
         return view('notes.index')->with('notes', $notes);
     }
 
@@ -25,7 +26,8 @@ class NoteController extends Controller
      */
     public function create()
     {
-        return view('notes.create');
+        $notebooks = NoteBook::where('user_id', Auth::id())->get();
+        return view('notes.create')->with('notebooks', $notebooks);
     }
 
     /**
@@ -43,7 +45,8 @@ class NoteController extends Controller
             'user_id' => Auth::id(),
             'uuid' => Str::uuid(),
             'title' => $request->title,
-            'text' => $request->text
+            'text' => $request->text,
+            'notebook_id' => $request->notebook_id
         ]);
         $note->save();
 
@@ -75,7 +78,9 @@ class NoteController extends Controller
             abort(403);
         }
 
-        return view('notes.edit', ['note' => $note]);
+        $notebooks = NoteBook::where('user_id', Auth::id())->get();
+
+        return view('notes.edit', ['note' => $note, 'notebooks' => $notebooks]);
     }
 
     /**
@@ -99,10 +104,12 @@ class NoteController extends Controller
         // create a new Note to be saved
         $note->update([
             'title' => $request->title,
-            'text' => $request->text
+            'text' => $request->text,
+            'notebook_id' => $request->notebook_id,
         ]);
 
-        return to_route('notes.show', $note);
+        return to_route('notes.show', $note)
+            ->with('success', 'Changes saved');
 
     }
 
@@ -119,6 +126,7 @@ class NoteController extends Controller
         // create a new Note to be saved
         $note->delete();
 
-        return to_route('notes.index');
+        return to_route('notes.index')
+            ->with('success', 'Note has been deleted!');
     }
 }
