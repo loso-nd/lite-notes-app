@@ -34,3 +34,10 @@ require __DIR__.'/auth.php';
 Route::resource('notes', NoteController::class)->middleware('auth');
 Route::resource('notebooks', NoteBookController::class)->middleware('auth');
 Route::get('/trashed', [TrashedNoteController::class, 'index'])->middleware('auth')->name('trashed.index');
+
+// We do not get a soft deleted model while using route model binding by default. 
+// We need to chain this with trashed method to include soft deleted models. 
+// Using Route Model Binding
+Route::get('/trashed/{note}', [TrashedNoteController::class, 'show'])->withTrashed()->middleware('auth')->name('trashed.show');
+
+Route::put('/trashed/{note}', [TrashedNoteController::class, 'update'])->withTrashed()->middleware('auth')->name('trashed.update');

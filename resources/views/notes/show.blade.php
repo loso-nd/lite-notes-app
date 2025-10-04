@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Notes') }}
+            {{ !$note->trashed() ? 'Notes' : 'Trash' }}
         </h2>
     </x-slot>
 
@@ -14,25 +14,55 @@
                 {{ $note->notebook->name }}
             </span>
 
-            <div class="flex justify-between items-center">
-                <div class="flex gap-6">
-                    <p class="opacity-70"><strong>Created:</strong> {{ $note->created_at->diffForHumans() }}</p>
-                    <p class="opacity-70"><strong>Last Changed:</strong> {{ $note->updated_at->diffForHumans() }}</p>
-                </div>
+            @if (!$note->trashed())
+                <div class="flex justify-between items-center">
 
-                <div class="flex gap-6">
-                    <x-link-button href="{{ route('notes.edit', $note) }}">Edit Note</x-link-button>
-                    <form action="{{ route('notes.destroy', $note) }}" method="post">
-                        @method('delete')
-                        @csrf
-                        <x-primary-button class="bg-red-500 hover:bg-red-600 focus:bg-red-600"
-                            onclick=" return confirm('Are you sure you want to move this note to trash?')"> 
-                            Move Note to Trash 
-                        </x-primary-button>
-                    </form>
-                </div>
+                    <div class="flex gap-6">
+                        <p class="opacity-70"><strong>Created:</strong> {{ $note->created_at->diffForHumans() }}</p>
+                        <p class="opacity-70"><strong>Last Changed:</strong> {{ $note->updated_at->diffForHumans() }}</p>
+                    </div>
 
-            </div>
+                    <div class="flex gap-6">
+                        <x-link-button href="{{ route('notes.edit', $note) }}">Edit Note</x-link-button>
+                        <form action="{{ route('notes.destroy', $note) }}" method="post">
+                            @method('delete')
+                            @csrf
+                            <x-primary-button class="bg-red-500 hover:bg-red-600 focus:bg-red-600"
+                                onclick=" return confirm('Are you sure you want to move this note to trash?')"> 
+                                Move Note to Trash 
+                            </x-primary-button>
+                        </form>
+                    </div>
+
+                </div>
+            @else
+               <div class="flex justify-between items-center">
+
+                    <div class="flex gap-6">
+                        <p class="opacity-70"><strong>Deleted:</strong> {{ $note->deleted_at->diffForHumans() }}</p>
+                    </div>
+
+                    <div class="flex gap-6">
+                        <form action="{{ route('trashed.update', $note) }}" method="post">
+                            @method('put')
+                            @csrf
+                            <x-primary-button class="bg-indigo-500 hover:bg-indigo-600 focus:bg-red-600"> 
+                                Restore Note
+                            </x-primary-button>
+                        </form>
+                        {{-- <form action="{{ route('notes.destroy', $note) }}" method="post">
+                            @method('delete')
+                            @csrf
+                            <x-primary-button class="bg-red-500 hover:bg-red-600 focus:bg-red-600"
+                                onclick=" return confirm('Are you sure you want to move this note to trash?')"> 
+                                Move Note to Trash 
+                            </x-primary-button>
+                        </form> --}}
+                    </div>
+
+                </div>
+                
+            @endif
 
             <div class="bg-white p-6 overflow-hidden shadow-sm sm:rounded-lg">
                 <h2 class="font-bold text-2xl text-indigo-600">
