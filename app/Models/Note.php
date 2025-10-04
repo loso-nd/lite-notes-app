@@ -21,15 +21,10 @@ class Note extends Model
     {
         return 'uuid';
     }
+
+    // Inverse relationship that lets us access the user of a specific note.
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
-
-
-/**
- * fillable property
- * *
- * specify all the fields that you want to be mass-assigned 
- * 
- * protected guarded 
- * variable and specify the fields that you don't want to be assigned, which you want to protect from mass assignment.
- * Just be careful when you do this, because in case you don't want some of the fields to be filled, you'll have to guard them
- * */ 

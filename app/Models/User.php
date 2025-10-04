@@ -46,4 +46,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+// this definition allows us to access notes of a specific user as if notes were a property of this user model.
+    public function notes()
+    {
+        return $this->hasMany(Note::class);
+    }
 }

@@ -16,8 +16,12 @@ class NoteController extends Controller
      */
     public function index()
     {
-        $user_id = Auth::id();
-        $notes= Note::where('user_id', $user_id)->latest('updated_at')->paginate(5);
+        // Fetching notes by using the relationship where notes belonging to the user.
+        $notes = Note::whereBelongsTo(Auth::user())->latest('updated_at')->paginate(5);
+
+        // // Fetch the notes that belong to the authenticated user using the Elo relationship.
+        // $notes = Auth::user()->notes()->latest('updated_at')->paginate(5);
+
         return view('notes.index')->with('notes', $notes);
     }
 
@@ -41,15 +45,25 @@ class NoteController extends Controller
             'text' => 'required'
         ]);
 
-        // create a new Note to be saved
-        $note = new Note([
-            'user_id' => Auth::id(),
+        // instead of manually entering the user ID with the authenticated users ID, we can create this note using... 
+        // Auth::user()-> notes and use the create method
+        $note = Auth::user()->notes()->create([
             'uuid' => Str::uuid(),
             'title' => $request->title,
             'text' => $request->text,
             'notebook_id' => $request->notebook_id
         ]);
-        $note->save();
+        // $note->save();
+
+        // // create a new Note to be saved
+        // $note = new Note([
+        //     'user_id' => Auth::id(),
+        //     'uuid' => Str::uuid(),
+        //     'title' => $request->title,
+        //     'text' => $request->text,
+        //     'notebook_id' => $request->notebook_id
+        // ]);
+        // $note->save();
 
         return to_route('notes.show', $note);
     }
@@ -59,7 +73,14 @@ class NoteController extends Controller
      */
     public function show(Note $note)
     {
-        if($note->user_id !== Auth::id()){
+        // if($note->user_id !== Auth::id()){
+        //     abort(403);
+        // }
+
+        // instead of checking the ID against the foreign key, we can access the note's user model 
+        // with $note->user and directly check if this user is the authorized user using is(Auth::user). 
+        // comparing the primary key of the same model. So if it's not the same user then abort.
+        if(!$note->user->is(Auth::user())){
             abort(403);
         }
 
@@ -71,7 +92,7 @@ class NoteController extends Controller
      */
     public function edit(Note $note)
     {
-        if($note->user_id !== Auth::id()){
+       if(!$note->user->is(Auth::user())){
             abort(403);
         }
 
@@ -84,7 +105,7 @@ class NoteController extends Controller
      */
     public function update(Request $request, Note $note)
     {
-        if($note->user_id !== Auth::id()){
+       if(!$note->user->is(Auth::user())){
             abort(403);
         }
 
@@ -108,12 +129,10 @@ class NoteController extends Controller
      */
     public function destroy(Note $note)
     {
-        // User can only see thier own notes
-        if($note->user_id !== Auth::id()){
+        if(!$note->user->is(Auth::user())){
             abort(403);
         }
 
-        // create a new Note to be saved
         $note->delete();
 
         return to_route('notes.index')
