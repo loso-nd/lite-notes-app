@@ -26,7 +26,8 @@
                         @method('delete')
                         @csrf
                         <x-primary-button class="bg-red-500 hover:bg-red-600 focus:bg-red-600"
-                            onclick=" return confirm('Are you sure you want to delete this note?')"> Delete Note 
+                            onclick=" return confirm('Are you sure you want to move this note to trash?')"> 
+                            Move Note to Trash 
                         </x-primary-button>
                     </form>
                 </div>
