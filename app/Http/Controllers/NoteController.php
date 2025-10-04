@@ -19,9 +19,6 @@ class NoteController extends Controller
         // Fetching notes by using the relationship where notes belonging to the user.
         $notes = Note::whereBelongsTo(Auth::user())->latest('updated_at')->paginate(5);
 
-        // // Fetch the notes that belong to the authenticated user using the Elo relationship.
-        // $notes = Auth::user()->notes()->latest('updated_at')->paginate(5);
-
         return view('notes.index')->with('notes', $notes);
     }
 
@@ -53,17 +50,6 @@ class NoteController extends Controller
             'text' => $request->text,
             'notebook_id' => $request->notebook_id
         ]);
-        // $note->save();
-
-        // // create a new Note to be saved
-        // $note = new Note([
-        //     'user_id' => Auth::id(),
-        //     'uuid' => Str::uuid(),
-        //     'title' => $request->title,
-        //     'text' => $request->text,
-        //     'notebook_id' => $request->notebook_id
-        // ]);
-        // $note->save();
 
         return to_route('notes.show', $note);
     }
@@ -73,13 +59,6 @@ class NoteController extends Controller
      */
     public function show(Note $note)
     {
-        // if($note->user_id !== Auth::id()){
-        //     abort(403);
-        // }
-
-        // instead of checking the ID against the foreign key, we can access the note's user model 
-        // with $note->user and directly check if this user is the authorized user using is(Auth::user). 
-        // comparing the primary key of the same model. So if it's not the same user then abort.
         if(!$note->user->is(Auth::user())){
             abort(403);
         }

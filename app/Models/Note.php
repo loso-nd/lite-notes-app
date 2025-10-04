@@ -27,4 +27,10 @@ class Note extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    // Inverse relationship that lets us access the note from a specific note.
+    public function notebook()
+    {
+        return $this->belongsTo(NoteBook::class);
+    }
 }
